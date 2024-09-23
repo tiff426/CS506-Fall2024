@@ -69,3 +69,8 @@
 * will this algo always lead to convergence? we'll see
 * lloyds algorithm is not alway optimal!!
     * imagine that the true center lies righ tin the middle of two blue clusters, those clusters will neve come together even though they the same, so not optimal
+
+### 9/23/24
+* finishing lloyd's algo
+    * prof way: pseudo code with what methods you'll need, then implement those functions
+    * see workseet 3 for lloyds
