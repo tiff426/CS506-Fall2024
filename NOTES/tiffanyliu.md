@@ -121,3 +121,61 @@
         * clusters are all kind of similar
 * point of diminishing return...
     * silhouette score plot bad if pqast the point of diminishig return
+
+### 9/25/24
+* dendrogram: tels you at what distance do you stat to merge points together becuse they are so similar
+    * kind of like a phylogenetic tree
+* can cut the dendrogram (like horiztonal line) to get a number of clusters
+    * ![image info](./assets/hierarchical.png)
+* 2 types of hierarchical
+    * agglomerative
+        * start with every point in its own cluser
+        * at each step merge the two clsoest clusters
+        * stop when every point is in the same cluster
+    * divisive
+        * start wtih every point in the same cluster
+        * at each step split until each point is in its own cluster
+    * but what's our metric for merging clusters??
+* to actual split our clusters we can use kmeans
+* single link distance: the minimum of all pairwise distances between a point from one cluster and a point from another cluster
+    * $D_{SL}(C_1, C_2) = min\{d(p_1, p_2) | p_1 ∈ C_1, p_2 ∈ C_2\}$
+    * basically look at all the possible distances between a pointin cluster A and a point in cluster B, then take the minimum distance
+* so we use single link distance to decide which point to merge next into our cluster (agglomerative)
+    * so if point D is closer to any point in the cluster than point C is to any pointi n the cluster, than merge D first
+    * single link distance is from D, not C
+* complete link distance: basically single link but now with the max pairwise distance
+    * $D_{SL}(C_1, C_2) = max\{d(p_1, p_2) | p_1 ∈ C_1, p_2 ∈ C_2\}$
+* i think
+    * complete link distance allows us to find the distance between clusters in hierarchical clustering
+    * single link distance to decide which point to merge
+* average link distance: all pairwise distances, then find the average of them all
+    * formula...
+* centroid distance: find the distance between centroids of clusters
+* ward's distance: difference between the spread/variance of pointsin  the merged clusters and the unmerged clusters
+    * answers the question of what the consequence of merging points does to the variance
+        * merging points can increase variance, so ward's distance lets ys see that
+    * see slides for formula
+* so actual agglomerative clustering algorithm
+    * let each point in the dataset be in its own clustering
+    * compute the distance between all pairs of clusters
+    * merge the two closest clusters
+    * repeat 3 & 4 until all points are in the same cluster
+* density based clustering
+    * dense if contains a certain amount of data points within some radius of region
+* we shoudl dstinguish between poitns at the core of a dense refdion and points at the border of the dense region
+    * core point: a point that has at least min_pts points withint its defined neighborhood
+    * noise point: neither a core nor border (doesn't have enough points around it)
+    * boider point:if it is in the neighborhood of a core point
+* DBScan algorithm, given the size of the $\eps$neighborhood and min_pts
+    * find the neighborhood of each point 
+    * label the point as core if its enighborhood has at least min_pts
+    * for each core pint, assign to the same cluster all the core points in its neighborhood
+    * label points in its neighborhood that are not core as broder
+    * label points as noise if neither core nor border
+    * assign bordeer points to nearby clusters
+* kind of like DFS, liek basically look at the nighbors of a core point and decide if they are core poitns,a nd if core then same cluster then repeat
+    * basically you just look at a core and add all the core points in the neighborhood to the cluster, and like border points in the cluster ar elebaled as border, but are still in cluster
+* beneifits of DBScan
+    * can identify clusters of difference shapes and sizes
+    * resistant to noise
+* 
