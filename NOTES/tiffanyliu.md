@@ -178,4 +178,136 @@
 * beneifits of DBScan
     * can identify clusters of difference shapes and sizes
     * resistant to noise
-* 
+
+### 9/30/24
+* something about a zoo
+* another form of clustering
+    * using prabbility and weighting...
+* basically in your dataset there could be the possibility that one value fro a point is more probable
+    * like you could be predisposed ot being a different species in the zoo
+* so now we need to consider the probabilty of being some species given tht we had previously been a different species???
+    * $P(S_j|X_i) = \frac{P(X_i|S_j)P(S_j)}{P(X_i)}$
+        * P(S_j): prior probability of seeing species Sj
+        * P(X_ | S_j) is PDF of species S_j weights evaluatged at weighr X_i
+            * liek actual weights, so what weight are you actually mor elikely to see based on weight
+* P(X_i_ is individual, so to combine all the species, we csan take the weighted average
+    ![image info](./assets/weights.png)
+    * $P(X_i) = \sum_{j}P(S_j)P(X_i|S_j)$
+        * mixture proportion: represents the probability of belonging to Sj
+        * orobabliilty of seeeing x when sampling from Sj
+* maximum likelihood estimation
+    * say we flip a coin 5 times and get HTTHT
+        * knowing nothing about this cound except this, we'd thing Pr(H) = 2/5 = 0.4
+        * but we actually did was that we found a p (bernoulli param) such that we can maximize the probability of this specific sequence happening
+            * like basically the probality of a situation happening is just the bernoulli p tha amkes this possible, whichh is intuitive
+* GMM: gaussian mixture model
+* GMM clustering -> find the GMM that maximizes the probaility of seeing the data we have
+    * remmeber:
+    * $P(X_i) = \sum_{j}P(S_j)P(X_i|S_j)$
+    * so basically we have to find the parameters that uniquely character this
+        * params -> basically take the the probability of each individual thing (which is a GMM) and multiplu
+        $$\Pi_{i}P(X_i) = \Pi_{i}\sum_{j}P(S_j)P(X_i|S_j)$$
+* so how do we find the critical points of this function ^
+    * we can log transform
+    $$P(S_j)= \frac{1}{N}\sum_{i}P(S_j|X_i)$$
+* but we are tyrtryingign to find $$P(S_j|X_i)$$
+* expectation maximization algorithm
+    * we're in a loop
+        * in order to find one val, we need other values btu those other values depend on this one val sooooooo
+    * start with randm $\mu, \Sigma, P(S_j)$
+    * computer $P(S_j | X_i)$ for all Xi by using these values $\mu, \Sigma, P(S_j)$
+    * computer an dupdate those $\mu, \Sigma, P(S_j)$ from $P(S_j | X_i)$
+    * repeat 2 and 3 until convergence
+    * these symbols are actually vectors,,,,, but for scalar jsut square them...?
+* so what initialozatopms expectation maxomization algorithm? -> kmeans!
+
+* dbscan?
+    * something about density...
+
+### 10/2/24 
+* singular value decomposition
+* datasets have characteristics/features that influence the values in the dataset
+* we can plot/model the data set
+* ![image info](./assets/svdclusters.png)
+    * first one is bad because all the information in A is in B
+        * 2 dimensions -> 2 features
+        * 1 dimension of actual information 
+        * so a high dimenstional dataset but low range/span of information
+        * this is like really dedundant data, like taking on se tthen multiplying it by many constants, data isn;t really special
+    * second is better, we know that if A changes, then B may change, so they don't model the same feature
+        * but we don't want this either since we want to be able to isolate the effects of A and B, not that they are functions of each other
+        * we don't to change A since there is a side effect of changing B
+    * last is best
+        * this is the case where A and B are unrelated
+        * we see that as A changes, B has no change, since they ar enot related
+        * this way we can isolate the effects of A and B without any changing in them
+* we use SVD to get from the dataset with related features to a dataset without those linear relationships
+    * only removing the linear relationsship
+        * if it was liek a quadratic relationship between A and B, then we would not be able to apply SVD to remove the relationship 
+    * liek from plot 2 to plot 3
+* use SVD to denoise your data
+    * remove noise, but not variance
+* basically we go from 2 dimensional to 1 dimensional by either projecteding onto one of the features
+    * would wanna project on whichever results in the dataset that still captures all the variance in our dataset
+* so an example of the data
+    * ![image info](./assets/matrix.png)
+        * so we have m features, then n points
+* goal: examine this matrix and uncover its linear algebraic proporties to
+    * approximate A with a smaller matrix B that is easier to store but contains similar info as A
+    * dimensionality reduction/feature extraction (actually reduce the number of features)
+        * remove linear relationships
+        * combine some features to better express variance (like if 2 * age - 3 * distance is better to capture variance)
+    * anomaly detection and denoising, like data points that are very far away from each other
+* matrix factorization: decomposing a matrix into 2 components, U ad V
+    * U -> n x k, k is rank
+    * V = k x n
+* factorization can be a better option for storage since k x n and n x k could be a lot smaller than the size of A
+    * low rank matrix speeds up algorithms
+* so what does k small mean?
+    * rank is small
+        * small amount of information contained in the dataset
+            * so a lot of redundence in data, maybe many linearly dependent columns
+* there's a compormise
+    * we want lotta info => high rank
+    * but bad for storign and efficiency
+* but often times our datasets aren;t that great, there is some noise
+    * which is why we want to denoise and whatnot by approximating
+        * yes, woudl be lower rank, but better data structure...
+* so we can use SVD in our matrix factorization to attain our desired matrices...
+    * $A = UΣV^T$
+        * A is matrix
+        * U and V compoments, V transpose
+        * ![image info](./assets/sigma.png)
+* so we have this frobenius distance, and our goal is to minimuze frobenius distance
+* basically the goal of this matrix approximation for matrix factoriation is
+    * minimize frobenius distance
+    * small k compared to m and n
+* frobenius distance: .........
+* rank = dimenstsion basically...
+* example approximation
+    * ![image info](./assets/approx1.png)
+        * we have A = UΣV^T
+    * eventually becomes
+    ![image info](./assets/approxlast.png)
+    
+* so we look at this photo of the boat and we ask ourselves
+    * is there a column of pixels that is similar to another column of pixels
+        * if not, then full rank
+* so how do we find the right k?
+    do singular value plot and find elbow point
+    loos at the residual error of choosing different k
+* form worksheet
+    * as we increase rank, we get closer and closer to what the actual dtat looks like
+        * but rank doesn't need to be super high to have a pretty good approximation
+* dimenstionality reduction: porject data onto the feature with least variance...?
+    * dimensionatliy reduction is for feature reduction
+        * multiply by something........
+* usually when we do SVD we wanna mean center data -> normalize kinda
+    * this allows for us to SVD with datat that has different scales
+    * like if completely different units and unrelatable
+* but you might not always want to do that
+    * liek if they have the same units already
+    * cuz then we wanna see that difference in scale
+* anomaly detection
+    * O = A - A^k
+        * the largest rows of O are the anomalies
