@@ -311,3 +311,33 @@
 * anomaly detection
     * O = A - A^k
         * the largest rows of O are the anomalies
+
+### 10/7/24
+* latent semantic analysis -> an application of SVD
+* say we have a ocllection of papers and we have counted the number of times certian words have been used
+    * can we write each documnet as a vector in a space of concepts
+        * like vectorizing...
+    * we want to create doc to term matrix, term to concept matrix, then we could get doc to concept matrix
+    * doc to term
+        * represent each documnet by having 
+            * inputs as documents
+            * words are features
+                * the precence of each word -> marcated by a 1
+        * but we'll also have some filler words so somethimes we might preprocess to get rid of fillers or to lump different forms of the same word into one bin (stemming)
+            * most liekly preprocessing
+    * term to concept
+        * we basically have each concept on each axis, then each term/feature is a vector demonstrating whch concept it is more related to
+        * ![image infor](./assets/concepts.png)
+    * but we can also represent documents instead by using counts of each word/feature rather than jsut the presence
+* so how do we get these representations? -> SVD
+    * start with doc to term similarity
+        * then SVD
+            doc to concept matrix X strength og each concept X term to concept similarity
+            ![image info](./assets/LSASVD.png)
+* but an even better way of representing documents: TfiDf
+    * tf * idf
+        * tf = term frequency in documnet
+        * idf = $\log{\frac{\text{number of documents}}{\text{number of documents that contain that term}}}$
+    * so if a word is very present, then we want to penalize because... it's not special? more redundant?
+        * like the word "the " woudl probabaly be super frequent, but not important, so penalize so it won't be represented
+* 
